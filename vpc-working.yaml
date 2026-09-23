@@ -1,0 +1,90 @@
+# Description of what this change includes
+# Revision number
+# Time
+
+
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: >
+  AWS CloudFormation template for CYB260L.
+  Creates a Virtual Private Cloud (VPC) in the US-West-2 Region
+  with three subnets distributed across three Availability Zones.
+
+Parameters:
+
+  StudentID:
+    Type: String
+    Default: roddou0678
+    Description: ECPI student ID used to identify the VPC.
+
+Resources:
+
+  # Main VPC
+  StudentVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub "VPC-${StudentID}"
+
+  # Subnet in Availability Zone us-west-2a
+  SubnetAZ1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref StudentVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: us-west-2a
+      Tags:
+        - Key: Name
+          Value: !Sub "VPC-${StudentID}-Subnet-AZ1"
+
+  # Subnet in Availability Zone us-west-2b
+  SubnetAZ2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref StudentVPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: us-west-2b
+      Tags:
+        - Key: Name
+          Value: !Sub "VPC-${StudentID}-Subnet-AZ2"
+
+  # Subnet in Availability Zone us-west-2c
+  SubnetAZ3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref StudentVPC
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: us-west-2c
+      Tags:
+        - Key: Name
+          Value: !Sub "VPC-${StudentID}-Subnet-AZ3"
+
+Outputs:
+
+  VPCId:
+    Description: ID of the newly created VPC.
+    Value: !Ref StudentVPC
+
+  VPCName:
+    Description: Name assigned to the VPC.
+    Value: !Sub "VPC-${StudentID}"
+
+  VPCCIDR:
+    Description: IPv4 CIDR block assigned to the VPC.
+    Value: 10.0.0.0/16
+
+  SubnetAZ1ID:
+    Description: ID of the subnet in us-west-2a.
+    Value: !Ref SubnetAZ1
+
+  SubnetAZ2ID:
+    Description: ID of the subnet in us-west-2b.
+    Value: !Ref SubnetAZ2
+
+  SubnetAZ3ID:
+    Description: ID of the subnet in us-west-2c.
+    Value: !Ref SubnetAZ3
